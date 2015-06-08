@@ -1,52 +1,48 @@
+var TextLayer = cc.Layer.extend({
+    
+    label:null,
+    deltaX:1,
+    bg:null,
+    frame:0,
+    ctor:function(){
+        this._super();
+        
+        var size = cc.director.getWinSize();
+        this.label = cc.LabelTTF.create("Test", "Arial", 40);
+        this.label.setPosition(size.width / 2, size.height / 2);
+        this.bg = new cc.DrawNode();
+        this.addChild(this.label, 1);
+        this.addChild(this.bg)
+        this.scheduleUpdate()
+        return true;
+    },
+    update:function(){
+        var size = cc.director.getWinSize();
+        this.label.x += this.deltaX;
+        if(this.label.x>=size.width|| this.label.x<=0){
+            this.deltaX *= -1;
+        }
+        this.label.y = Math.sin(this.frame/20)*50 + size.height/2;
+        this.bg.drawDot(new cc.Point(this.label.x,this.label.y),2,cc.color(255,255,255));
+        this.frame++;
+    }
+    
+    
+})
+
+
 
 
 var MyScene = cc.Scene.extend({
                           onEnter:function () {
                               this._super();
-                              var size = cc.director.getWinSize();
-                              var sprite = cc.Sprite.create("HelloWorld.png");
-                              sprite.setPosition(size.width / 2, size.height / 2);
-                              sprite.setScale(0.8);
-                              this.addChild(sprite, 0);
-
-                              var label = cc.LabelTTF.create("Test", "Arial", 40);
-                              label.setPosition(size.width / 2, size.height / 2);
-                              
-                              var label2= cc.LabelTTF.create("layer1","Arial","30")
-                              label2.setPosition(30, 30);
-                              var layer = new cc.Layer();
-                              this.addChild(layer);
-                              layer.addChild(label2);
-                              
-                              this.addChild(label, 1);
+                              var textLayer = new TextLayer();
+                              this.addChild(textLayer,1)
                           }
                       });  window.onload = function(){
               cc.game.onStart = function(){
                   //load resources
-                  cc.LoaderScene.preload(["HelloWorld.png"], function () {
-                      var MyScene = cc.Scene.extend({
-                          onEnter:function () {
-                              this._super();
-                              var size = cc.director.getWinSize();
-                              var sprite = cc.Sprite.create("HelloWorld.png");
-                              sprite.setPosition(size.width / 2, size.height / 2);
-                              sprite.setScale(0.8);
-                              this.addChild(sprite, 0);
-
-                              var label = cc.LabelTTF.create("Test", "Arial", 40);
-                              label.setPosition(size.width / 2, size.height / 2);
-                              
-                              var label2= cc.LabelTTF.create("layer1","Arial","30")
-                              label2.setPosition(30, 30);
-                              var layer = new cc.Layer();
-                              this.addChild(layer);
-                              layer.addChild(label2);
-                              
-                              this.addChild(label, 1);
-                          }
-                      });
                       cc.director.runScene(new MyScene());
-                  }, this);
               };
               cc.game.run("gameCanvas");
           };
